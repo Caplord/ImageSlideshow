@@ -41,7 +41,6 @@ let package = Package(
                 "Classes/Core/InputSource.swift",
                 "Classes/Core/PageIndicator.swift",
                 "Classes/Core/PageIndicatorPosition.swift",
-                "Classes/Core/SwiftSupport.swift",
                 "Classes/Core/UIImage+AspectFit.swift",
                 "Classes/Core/UIImageView+Tools.swift",
                 "Classes/Core/ZoomAnimatedTransitioning.swift",
