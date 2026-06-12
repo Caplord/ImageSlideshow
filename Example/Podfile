@@ -3,22 +3,11 @@ use_frameworks!
 
 target 'ImageSlideshow_Example' do
     pod "ImageSlideshow", :path => "../"
-    pod "ImageSlideshow/AFURL", :path => "../"
     pod "ImageSlideshow/Alamofire", :path => "../"
     pod "ImageSlideshow/SDWebImage", :path => "../"
     pod "ImageSlideshow/Kingfisher", :path => "../"
-end
 
-post_install do |installer|
-  installer.pods_project.targets.each do |target|
-    next unless target.name == 'AFNetworking'
-    target.build_configurations.each do |config|
-      # netinet6/in6.h became a private modular header in recent SDKs,
-      # which breaks AFNetworking's direct #import when modules are on.
-      # Without modules there is no auto-linking, so link the system
-      # frameworks explicitly.
-      config.build_settings['CLANG_ENABLE_MODULES'] = 'NO'
-      config.build_settings['OTHER_LDFLAGS'] = '$(inherited) -framework UIKit -framework WebKit -framework CoreGraphics -framework MobileCoreServices -framework SystemConfiguration -framework Security'
+    target 'ImageSlideshow_Tests' do
+        inherit! :search_paths
     end
-  end
 end
