@@ -13,7 +13,7 @@ import ImageSlideshow
 import Kingfisher
 
 /// Input Source to image using Kingfisher
-public class KingfisherSource: NSObject, InputSource {
+public class KingfisherSource: NSObject, @preconcurrency InputSource {
     /// url to load
     public var url: URL
 
@@ -54,16 +54,15 @@ public class KingfisherSource: NSObject, InputSource {
     /// - Parameters:
     ///   - imageView: UIImageView that receives the loaded image
     ///   - callback: Completion callback with an optional image
+    @MainActor
     @objc
     public func load(to imageView: UIImageView, with callback: @escaping (UIImage?) -> Void) {
-        Task { @MainActor in
-            imageView.kf.setImage(with: self.url, placeholder: self.placeholder, options: self.options, progressBlock: nil) { result in
-                switch result {
-                case .success(let image):
-                    callback(image.image)
-                case .failure:
-                    callback(self.placeholder)
-                }
+        imageView.kf.setImage(with: self.url, placeholder: self.placeholder, options: self.options, progressBlock: nil) { result in
+            switch result {
+            case .success(let image):
+                callback(image.image)
+            case .failure:
+                callback(nil)
             }
         }
     }
@@ -71,9 +70,7 @@ public class KingfisherSource: NSObject, InputSource {
     /// Cancel an image download task
     ///
     /// - Parameter imageView: UIImage view with the download task that should be canceled
-    public func cancelLoad(on imageView: UIImageView) {
-        Task { @MainActor in
-            imageView.kf.cancelDownloadTask()
-        }
+    @MainActor public func cancelLoad(on imageView: UIImageView) {
+        imageView.kf.cancelDownloadTask()
     }
 }
