@@ -25,6 +25,11 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate Xcode project
+        working-directory: Example
+        run: xcodegen generate
       - name: Install pods
         working-directory: Example
         run: pod install
