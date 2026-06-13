@@ -42,27 +42,6 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)"
         DEVELOPMENT_TEAM: 5VWB99DS38
 
-  ImageSlideshow_framework:
-    type: framework
-    platform: iOS
-    sources:
-      - path: ../ImageSlideshow/Classes/Core
-      - path: ImageSlideshow_framework
-      - path: ../ImageSlideshow/Assets/ic_cross_white@2x.png
-        buildPhase: resources
-      - path: ../ImageSlideshow/Assets/ic_cross_white@3x.png
-        buildPhase: resources
-    settings:
-      base:
-        PRODUCT_NAME: ImageSlideshow
-        PRODUCT_BUNDLE_IDENTIFIER: io.zvo.ImageSlideshow-framework
-        INFOPLIST_FILE: ImageSlideshow_framework/Info.plist
-        DEVELOPMENT_TEAM: 9X4J83EL7M
-        DEFINES_MODULE: YES
-        SKIP_INSTALL: YES
-        CURRENT_PROJECT_VERSION: 1
-        VERSIONING_SYSTEM: apple-generic
-
 schemes:
   ImageSlideshow-Example:
     build:
@@ -78,10 +57,3 @@ schemes:
       config: Release
     archive:
       config: Release
-
-  ImageSlideshow_framework:
-    build:
-      targets:
-        ImageSlideshow_framework: all
-    run:
-      config: Debug
