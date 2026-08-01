@@ -14,13 +14,13 @@ let package = Package(
             name: "ImageSlideshow",
             targets: ["ImageSlideshow"]),
         .library(
-            name: "ImageSlideshow/Alamofire",
+            name: "ImageSlideshowAlamofire",
             targets: ["ImageSlideshowAlamofire"]),
         .library(
-            name: "ImageSlideshow/SDWebImage",
+            name: "ImageSlideshowSDWebImage",
             targets: ["ImageSlideshowSDWebImage"]),
         .library(
-            name: "ImageSlideshow/Kingfisher",
+            name: "ImageSlideshowKingfisher",
             targets: ["ImageSlideshowKingfisher"])
     ],
     dependencies: [
