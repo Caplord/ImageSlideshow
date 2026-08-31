@@ -220,6 +220,7 @@ extension ZoomAnimatedTransitioningDelegate: UIGestureRecognizerDelegate {
 }
 
 @objcMembers
+@MainActor
 class ZoomAnimator: NSObject {
 
     var referenceImageView: UIImageView?
