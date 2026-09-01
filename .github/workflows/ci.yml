@@ -11,9 +11,6 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      # _Pods.xcodeproj would shadow the Swift package for xcodebuild
-      - name: Remove CocoaPods development project placeholder
-        run: rm -rf _Pods.xcodeproj
       - name: Build all package products
         run: |
           xcodebuild -scheme ImageSlideshow-Package \
@@ -30,16 +27,19 @@ jobs:
       - name: Generate Xcode project
         working-directory: Example
         run: xcodegen generate
-      - name: Install pods
+      - name: Resolve Swift package dependencies
         working-directory: Example
-        run: pod install
+        run: |
+          xcodebuild -resolvePackageDependencies \
+            -project ImageSlideshow.xcodeproj \
+            -scheme ImageSlideshow-Example
       - name: Run tests
         working-directory: Example
         run: |
           DEVICE=$(xcrun simctl list devices available | grep -m1 -oE 'iPhone [^(]+' | sed 's/ *$//')
           echo "Using simulator: $DEVICE"
           xcodebuild test \
-            -workspace ImageSlideshow.xcworkspace \
+            -project ImageSlideshow.xcodeproj \
             -scheme ImageSlideshow-Example \
             -destination "platform=iOS Simulator,name=$DEVICE" \
             CODE_SIGNING_ALLOWED=NO

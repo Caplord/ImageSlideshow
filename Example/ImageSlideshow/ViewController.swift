@@ -8,6 +8,9 @@
 
 import UIKit
 import ImageSlideshow
+import ImageSlideshowAlamofire
+import ImageSlideshowSDWebImage
+import ImageSlideshowKingfisher
 
 class ViewController: UIViewController {
 

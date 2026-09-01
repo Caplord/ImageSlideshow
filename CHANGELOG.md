@@ -1,5 +1,17 @@
 # Change log
 
+## [1.10.0](https://github.com/Caplord/ImageSlideshow/releases/tag/1.10.0) (01/09/2026)
+
+## Breaking
+
+- Dropped CocoaPods distribution; ImageSlideshow is now distributed exclusively via Swift Package Manager. If you currently depend on `pod 'ImageSlideshow'`, remove it from your `Podfile` and add `.package(url: "https://github.com/Caplord/ImageSlideshow.git", from: "1.10.0")` to your `Package.swift` (or via Xcode's *File > Add Package Dependencies…*) instead, selecting the `ImageSlideshow` product plus whichever of `ImageSlideshowAlamofire`, `ImageSlideshowSDWebImage`, `ImageSlideshowKingfisher` you need.
+
+## [1.9.5](https://github.com/Caplord/ImageSlideshow/releases/tag/1.9.5) (01/08/2026)
+
+## Breaking
+
+- Renamed Swift Package Manager products from the CocoaPods-subspec-style names containing a slash (e.g. `ImageSlideshow/Kingfisher`) to `ImageSlideshowKingfisher`, `ImageSlideshowAlamofire`, `ImageSlideshowSDWebImage`. The slash was accepted by SwiftPM but broke dynamic linking at runtime (dyld resolved it as a directory separator), so any consumer depending on the old product names must update to the new ones.
+
 ## [1.9.4](https://github.com/zvonicek/ImageSlideshow/releases/tag/1.9.4) (12/06/2026)
 
 ## Breaking
