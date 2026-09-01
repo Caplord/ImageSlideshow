@@ -2,11 +2,8 @@
 
 **Customizable Swift image slideshow with circular scrolling, timer and full screen viewer**
 
-[![Build Status](https://www.bitrise.io/app/9aaf3e552f3a575c.svg?token=AjiVckTN9ItQtJs873mYMw&branch=master)](https://www.bitrise.io/app/9aaf3e552f3a575c)
-[![Version](https://img.shields.io/cocoapods/v/ImageSlideshow.svg?style=flat)](http://cocoapods.org/pods/ImageSlideshow)
+[![CI](https://github.com/Caplord/ImageSlideshow/actions/workflows/ci.yml/badge.svg)](https://github.com/Caplord/ImageSlideshow/actions/workflows/ci.yml)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-[![License](https://img.shields.io/cocoapods/l/ImageSlideshow.svg?style=flat)](http://cocoapods.org/pods/ImageSlideshow)
-[![Platform](https://img.shields.io/cocoapods/p/ImageSlideshow.svg?style=flat)](http://cocoapods.org/pods/ImageSlideshow)
 
 
 
@@ -14,36 +11,31 @@
 
 ## 📱 Example
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+To run the example project, clone the repo, and run `xcodegen generate` from the Example directory first.
 
 ## 🔧 Installation
 
-### CocoaPods
-ImageSlideshow is available through [CocoaPods](http://cocoapods.org). To install
-it, simply add the following line to your Podfile:
+### Swift Package Manager
+ImageSlideshow is available through the [Swift Package Manager](https://www.swift.org/package-manager/). To install
+it, add the following dependency to your `Package.swift`, or add it via Xcode's *File > Add Package Dependencies…*:
 
-```ruby
-pod 'ImageSlideshow', '~> 1.9.3'
+```swift
+.package(url: "https://github.com/Caplord/ImageSlideshow.git", from: "1.10.0")
 ```
+
+Then add the `ImageSlideshow` product to your target, along with whichever input-source products you need (`ImageSlideshowAlamofire`, `ImageSlideshowSDWebImage`, `ImageSlideshowKingfisher`).
 
 ### Carthage
 To integrate ImageSlideshow into your Xcode project using Carthage, specify it in your Cartfile:
 
 ```ruby
-github "zvonicek/ImageSlideshow" ~> 1.9.3
+github "Caplord/ImageSlideshow" ~> 1.10.0
 ```
 
 Carthage does not include InputSources for external providers (due to dependency on those providers) so you need to grab the one you need from `ImageSlideshow/Classes/InputSources` manually.
 
 ### Manually
-One possibility is to download a built framework (ImageSlideshow.framework.zip) from [releases page](https://github.com/zvonicek/ImageSlideshow/releases/) and link it with your project (under`Linked Frameworks and Libraries` in your target). This is, however, currently problematic because of rapid Swift development -- the framework is built for a single Swift version and may not work on previous/future versions.
-
-Alternatively can also grab the whole `ImageSlideshow` directory and copy it to your project. Be sure to remove those external Input Sources you don't need.
-
-**Note on Swift 2.3, Swift 3 and Swift 4 support**
-
-Version 1.4 supports Swift 4. Swift 3 is supported from version 1.0, for Swift 2.2 and Swift 2.3 compatible code use version 0.6 or branch *swift-2.3*.
-
+You can also grab the whole `ImageSlideshow` directory and copy it to your project. Be sure to remove those external Input Sources you don't need.
 
 ## 🔨 How to use
 
@@ -53,13 +45,11 @@ Add ImageSlideshow view to your view hiearchy either in Interface Builder or in 
 
 Set images by using ```setImageInputs``` method on ```ImageSlideshow``` instance with an array of *InputSource*s. By default you can use ```ImageSource``` which takes ```UIImage``` or few other *InputSource*s for most popular networking libraries. You can also create your own input source by implementing ```InputSource``` protocol.
 
-| Library                                                       | InputSource name | Pod                               |
-| ------------------------------------------------------------- |:----------------:| ---------------------------------:|
-| [AlamofireImage](https://github.com/Alamofire/AlamofireImage) | AlamofireSource  | `pod "ImageSlideshow/Alamofire"`  |
-| [AFNetworking](https://github.com/AFNetworking/AFNetworking)  | AFURLSource      | `pod "ImageSlideshow/AFURL"`      |
-| [SDWebImage](https://github.com/rs/SDWebImage)                | SDWebImageSource | `pod "ImageSlideshow/SDWebImage"` |
-| [Kingfisher](https://github.com/onevcat/Kingfisher)           | KingfisherSource | `pod "ImageSlideshow/Kingfisher"` |
-| [Parse](https://github.com/ParsePlatform/Parse-SDK-iOS-OSX)   | ParseSource      | `pod "ImageSlideshow/Parse"`      |
+| Library                                                       | InputSource name | SPM product                |
+| ------------------------------------------------------------- |:----------------:| ---------------------------:|
+| [AlamofireImage](https://github.com/Alamofire/AlamofireImage) | AlamofireSource  | `ImageSlideshowAlamofire`  |
+| [SDWebImage](https://github.com/rs/SDWebImage)                | SDWebImageSource | `ImageSlideshowSDWebImage` |
+| [Kingfisher](https://github.com/onevcat/Kingfisher)           | KingfisherSource | `ImageSlideshowKingfisher` |
 
 
 ```swift
@@ -67,8 +57,7 @@ slideshow.setImageInputs([
   ImageSource(image: UIImage(named: "myImage"))!,
   ImageSource(image: UIImage(named: "myImage2"))!,
   AlamofireSource(urlString: "https://images.unsplash.com/photo-1432679963831-2dab49187847?w=1080"),
-  KingfisherSource(urlString: "https://images.unsplash.com/photo-1432679963831-2dab49187847?w=1080"),
-  ParseSource(file: PFFile(name:"image.jpg", data:data))
+  KingfisherSource(urlString: "https://images.unsplash.com/photo-1432679963831-2dab49187847?w=1080")
 ])
 ```
 
