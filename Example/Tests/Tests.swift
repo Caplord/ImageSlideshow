@@ -191,3 +191,111 @@ class InputSourceContractTests: XCTestCase {
         XCTAssertEqual(item.gestureRecognizer?.isEnabled, true)
     }
 }
+
+@MainActor
+class PreloadTests: XCTestCase {
+
+    private func makeSlideshow(preload: ImagePreload, count: Int) -> ImageSlideshow {
+        let slideshow = ImageSlideshow(frame: CGRect(x: 0, y: 0, width: 300, height: 200))
+        slideshow.circular = false
+        slideshow.preload = preload
+        slideshow.setImageInputs((0..<count).map { _ in StubSource(image: solidImage()) })
+        return slideshow
+    }
+
+    func testAllPreloadLoadsEveryItem() {
+        let slideshow = makeSlideshow(preload: .all, count: 5)
+
+        XCTAssertTrue(slideshow.slideshowItems.allSatisfy { $0.imageView.image != nil })
+    }
+
+    func testFixedPreloadOnlyLoadsItemsWithinOffset() {
+        let slideshow = makeSlideshow(preload: .fixed(offset: 1), count: 5)
+
+        slideshow.setCurrentPage(2, animated: false)
+
+        let loaded = slideshow.slideshowItems.map { $0.imageView.image != nil }
+        XCTAssertEqual(loaded, [false, true, true, true, false])
+    }
+
+    func testFixedPreloadReleasesImagesOutsideOffsetAfterPaging() {
+        let slideshow = makeSlideshow(preload: .fixed(offset: 1), count: 5)
+
+        slideshow.setCurrentPage(0, animated: false)
+        XCTAssertNotNil(slideshow.slideshowItems[0].imageView.image)
+
+        slideshow.setCurrentPage(4, animated: false)
+
+        XCTAssertNil(slideshow.slideshowItems[0].imageView.image)
+        XCTAssertNotNil(slideshow.slideshowItems[4].imageView.image)
+    }
+}
+
+@MainActor
+class PageIndicatorViewTests: XCTestCase {
+
+    func testLabelPageIndicatorFormatsCurrentOverTotal() {
+        let indicator = LabelPageIndicator()
+        indicator.numberOfPages = 21
+
+        indicator.page = 4
+
+        XCTAssertEqual(indicator.text, "5/21")
+    }
+
+    func testUIPageControlPageProxiesCurrentPage() {
+        let pageControl = UIPageControl()
+        pageControl.numberOfPages = 3
+
+        pageControl.page = 2
+
+        XCTAssertEqual(pageControl.currentPage, 2)
+        XCTAssertEqual(pageControl.page, 2)
+    }
+}
+
+@MainActor
+class ActivityIndicatorTests: XCTestCase {
+
+    func testDefaultActivityIndicatorCreatesConfiguredView() {
+        let factory = DefaultActivityIndicator(style: .large, color: .red)
+
+        let indicator = factory.create()
+        let activityView = indicator.view as? UIActivityIndicatorView
+
+        XCTAssertNotNil(activityView)
+        XCTAssertEqual(activityView?.style, .large)
+        XCTAssertEqual(activityView?.color, .red)
+        XCTAssertTrue(activityView?.hidesWhenStopped ?? false)
+    }
+
+    func testShowAndHideStartAndStopAnimating() {
+        let indicator = UIActivityIndicatorView(style: .medium)
+
+        indicator.show()
+        XCTAssertTrue(indicator.isAnimating)
+
+        indicator.hide()
+        XCTAssertFalse(indicator.isAnimating)
+    }
+}
+
+@MainActor
+class AspectFitTests: XCTestCase {
+
+    func testWiderTargetFitsToHeight() {
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 100, height: 200)).image { _ in }
+
+        let rect = image.tgr_aspectFitRectForSize(CGSize(width: 400, height: 200))
+
+        XCTAssertEqual(rect, CGRect(x: 150, y: 0, width: 100, height: 200))
+    }
+
+    func testTallerTargetFitsToWidth() {
+        let image = UIGraphicsImageRenderer(size: CGSize(width: 200, height: 100)).image { _ in }
+
+        let rect = image.tgr_aspectFitRectForSize(CGSize(width: 200, height: 400))
+
+        XCTAssertEqual(rect, CGRect(x: 0, y: 150, width: 200, height: 100))
+    }
+}
